@@ -29,7 +29,7 @@ function npmcss(file) {
             basedir: base,
             extensions: ['.css'],
             packageFilter: function (pkg) {
-                pkg.main = pkg.css;
+                pkg.main = pkg.style;
                 return pkg;
             }
         });
