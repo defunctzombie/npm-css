@@ -1,98 +1,43 @@
-var ReadStream = require("read-stream")
-    , resolve = require("resolve")
-    , fs = require("fs")
-    , chain = require("chain-stream")
-    , path = require("path")
-    , inspect = require("util").inspect
-    , cssp = require("cssp")
-    , flatten = require("flatten")
+// builtin
+var fs = require('fs');
+var path = require('path');
 
-    , requireRegExp = /^@require(.*)$/
+// vendor
+var resolve = require('resolve');
 
-module.exports = NpmCss
+module.exports = npmcss;
 
-function NpmCss(files, options) {
-    options = options || {}
-    options.basedir = options.basedir || path.dirname(files[0])
+// process given file for // @require statements
+// file should be /full/path/to/file.css
+function npmcss(file) {
+    // load source file
+    var src = fs.readFileSync(file, 'utf8');
 
-    return chain(files)
-        .map(function (fileName) {
-            var file = path.resolve(process.cwd(), fileName)
+    // replace all instances of @require foo with proper content
+    src = src.replace(/@require (.*)\n/g, function(str, name) {
 
-            return fs.createReadStream(fileName)
-        })
-        // .toArray(log("files"))
-        .flattenSerial()
-        // .toArray(log("flattened state"))
-        .reduce(sum, "")
-        // .toArray(log("summer state"))
-        .concatMap(function (source) {
-            return cssp.parse(source)
-        })
-        .concatMap(function (list) {
-            if (list[0] !== "comment") {
-                return [list]
-            }
+        // base path for the file we want to load
+        var base = path.dirname(file);
 
-            var commentText = list[1]
-
-            if (!isRequire(commentText)) {
-                return [list]
-            }
-
-            var lines = commentText.split("\n")
-
-            lines = lines.filter(isRequire)
-                .map(function (str) {
-                    return str.trim()
-                })
-
-            var tokens = flatten(lines.map(extractUris, {
-                basedir: options.basedir
-            }).map(function (file) {
-                return fs.readFileSync(file).toString()
-            }).map(function (source) {
-                return cssp.parse(source).slice(1)
-            }), 1)
-
-            return tokens
-        })
-        .reduce(concat, [])
-        .map(function (tokens) {
-            return cssp.translate(tokens)
-        })
-        // .toArray(log("mapped state"))
-}
-
-function isRequire(value) {
-    return value.indexOf("@require") !== -1
-}
-
-function extractUris(value) {
-    var basedir = this.basedir
-
-    value = value.trim()
-    var uri = requireRegExp.exec(value)[1].trim()
-    return resolve.sync(uri, {
-        basedir: basedir
-        , extensions: [".css"]
-        , packageFilter: function ($package) {
-            $package.main = $package.css
-            return $package
+        // relative path, just read and load the file
+        if (name[0] === '.') {
+            var filepath = path.join(base, name);
+            return '*/\n' + npmcss(filepath) + '\n/*';
         }
-    })
+
+        var res = resolve.sync(name, {
+            basedir: base,
+            extensions: ['.css'],
+            packageFilter: function (pkg) {
+                pkg.main = pkg.css;
+                return pkg;
+            }
+        });
+
+        // run resolution on the required css file
+        return '*/\n' + npmcss(res) + '\n/*';
+    });
+
+    return src;
 }
 
-function sum(acc, value) {
-    return acc + value
-}
-
-function concat(acc, value) {
-    return acc.concat([value])
-}
-
-function log(str) {
-    return function (list) {
-        console.error(str, list)
-    }
-}

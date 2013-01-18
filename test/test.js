@@ -1,19 +1,38 @@
-var test = require("tap").test
-    , path = require("path")
+// builtin
+var path = require('path');
+var fs = require('fs');
 
-    , NpmCss = require("..")
-    , trycatch = require("trycatch")
+// vendor
+var test = require('tap').test;
 
-    , basedir = path.join(__dirname, "fixtures")
-    , input = [path.join(basedir, "input.css")]
+// local
+var npmcss = require('../');
 
+var kGenerate = process.env.TEST_GENERATE;
 
-test("css is correct", function (t) {
-    NpmCss(input, {
-        basedir: basedir
-    })
-        .value(function (str) {
-            console.error("results", str)
-            t.end()
-        })
-})
+var exp_dir = path.join(__dirname, 'expected');
+var fix_dir = path.join(__dirname, 'fixtures');
+
+var files = fs.readdirSync(fix_dir).filter(function(file) {
+    return /[.]css$/.test(file);
+});
+
+files.forEach(function(file) {
+    var actual_file = path.join(fix_dir, file);
+    var expected_file = path.join(exp_dir, file);
+
+    test(file, function(t) {
+        var actual = npmcss(actual_file);
+
+        if (kGenerate) {
+            fs.writeFileSync(expected_file, actual, 'utf8');
+            return t.end();
+        }
+
+        var expected = fs.readFileSync(expected_file, 'utf8');
+
+        t.plan(1);
+        t.equals(actual, expected);
+    });
+});
+

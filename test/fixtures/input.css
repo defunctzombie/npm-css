@@ -1,7 +1,5 @@
 /*
     @require ./required.css
+    @require foobar
 */
 
-.bar {
-    color: blue;
-}
