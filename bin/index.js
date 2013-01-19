@@ -1,26 +1,39 @@
-var argv = require("optimist")
-        .usage("Usage: npm-css [entry file] {OPTIONS}")
-        .wrap(80)
-        .option("outfile", {
-            alias: "o"
-            , desc: "Write the bundled css to this file\n" +
-                "If unspecified the output will go to stdout"
-        })
-        .option("basedir", {
-            alias: "b"
-            , desc: ""
-        })
-        .argv
-    , fs = require("fs")
+// builtin
+var fs = require('fs');
+var path = require('path');
 
-    , NpmCss = require("..")
-    , css = NpmCss(argv._, argv)
-    , output
+// local
+var npmcss = require('..');
 
-if (argv.outfile) {
-    output = fs.createWriteStream(argv.outfile)
-} else {
-    output = process.stdout
+var optimist = require('optimist')
+    .usage('Usage: npm-css [entry file] {OPTIONS}')
+    .wrap(80)
+    .option('outfile', {
+        alias: 'o',
+        desc: 'Write the bundled css to this file\n' +
+              'If unspecified the output will go to stdout'
+    })
+
+var argv = optimist.argv;
+
+var files = argv._;
+
+if (!files || files.length === 0) {
+    console.error('Error: at least one entry file must be specified\n');
+    optimist.showHelp();
+    return;
 }
 
-css.pipe(output)
+var css = '';
+
+files.forEach(function(file) {
+    file = path.resolve(process.cwd(), file);
+    css += npmcss(file);
+});
+
+if (argv.outfile) {
+    fs.writeFileSync(argv.outfile, css, 'utf8');
+    return;
+}
+
+process.stdout.write(css);
