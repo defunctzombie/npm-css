@@ -24,8 +24,38 @@ function npmcss(file) {
 
         // relative path, just read and load the file
         if (name[0] === '.') {
+            // if path is a dir, see if package.json is available
+            // if avail, read style field
+            // if not avail or no style field, use index.css
             var filepath = path.join(base, name);
-            return '*/\n' + npmcss(filepath) + '\n/*';
+
+            // path is a file
+            if (fs.statSync(filepath).isFile()) {
+                return '*/\n' + npmcss(filepath) + '\n/*';
+            }
+
+            // path is a dir
+            var pkginfo = path.join(filepath, 'package.json');
+
+            // package.json exists for path
+            // use style info and prefix
+            if (fs.existsSync(pkginfo)) {
+                var info = JSON.parse(fs.readFileSync(pkginfo));
+                filepath = path.join(base, name, info.style || 'index.css')
+                return '*/\n' + prefix(info.name, npmcss(filepath)) + '\n/*';
+            }
+
+            // no package.json, try index.css in the dir
+            filepath = path.join(filepath, 'index.css');
+
+            // do not prefix if just loading index.css from a dir
+            // allows for easier organization of multi css files without prefixing
+            if (fs.existsSync(filepath)) {
+                return '*/\n' + npmcss(filepath) + '\n/*';
+            }
+
+            // if all else fails, return original source
+            return src;
         }
 
         var res = resolve.sync(name, {

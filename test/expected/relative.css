@@ -1,0 +1,9 @@
+/* test require dir */
+
+/* should load localwidget based on localwidget/package.json
+/*
+  */
+/* .localwidget .foo */
+.localwidget .foo {}
+
+/**/
