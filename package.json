@@ -17,7 +17,9 @@
     "email": "raynos2@gmail.com"
   },
   "dependencies": {
-    "resolve": "0.2.3"
+    "resolve": "0.2.3",
+    "traverse": "0.6.3",
+    "cssp": "1.0.6"
   },
   "devDependencies": {
     "tap": "~0.3.1",

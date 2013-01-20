@@ -4,7 +4,9 @@ var path = require('path');
 
 // vendor
 var resolve = require('resolve');
-var cssprefix = require('css-prefix');
+
+// local
+var prefix = require('./lib/prefix');
 
 module.exports = npmcss;
 
@@ -35,15 +37,8 @@ function npmcss(file) {
             }
         });
 
-        var prefix_opt = {
-            parentClass: name,
-            prefix: ''
-        };
-
-        var cssstr = cssprefix(prefix_opt, npmcss(res));
-
         // run resolution on the required css file
-        return '*/\n' + cssstr + '\n/*';
+        return '*/\n' + prefix(name, npmcss(res)) + '\n/*';
     });
 
     return src;

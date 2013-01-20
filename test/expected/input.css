@@ -7,13 +7,35 @@
 /*    */
 /* foobar stuff */
 
-.foobar p {
-    color: blue;
-}
+/* .foobar */
+.foobar {}
 
-.foobar .bar {
-    color: white;
-}
+/* p.foobar */
+p.foobar {}
+
+/* .foobar p .foobar */
+.foobar p .foobar {}
+
+/* .foorbar p */
+.foobar p {}
+
+/* .foobar p */
+.foobar p {}
+
+/* .foobar.baz */
+.foobar.baz {}
+
+/* .foobar .baz */
+.foobar .baz {}
+
+/* .foobar .baz */
+.foobar .baz {}
+
+/* .baz.foobar */
+.baz.foobar {}
+
+/* .foobar .baz .foobar */
+.foobar .baz .foobar {}
 
 /**/
 
