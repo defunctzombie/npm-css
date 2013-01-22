@@ -4,18 +4,13 @@
   "description": "Require css from npm",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/Raynos/npm-css.git",
+  "repository": "git://github.com/shtylman/npm-css.git",
   "main": "index",
-  "homepage": "https://github.com/Raynos/npm-css",
   "contributors": [
     {
       "name": "Jake Verbaten"
     }
   ],
-  "bugs": {
-    "url": "https://github.com/Raynos/npm-css/issues",
-    "email": "raynos2@gmail.com"
-  },
   "dependencies": {
     "resolve": "0.2.3",
     "traverse": "0.6.3",
@@ -28,7 +23,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/Raynos/npm-css/raw/master/LICENSE"
+      "url": "http://github.com/shtylman/npm-css/raw/master/LICENSE"
     }
   ],
   "scripts": {
