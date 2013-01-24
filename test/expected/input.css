@@ -1,10 +1,7 @@
-/*
-    */
 .foo {
     color: red;
 }
 
-/*    */
 /* foobar stuff */
 
 /* .foobar */
@@ -37,5 +34,4 @@ p.foobar {}
 /* .foobar .baz .foobar */
 .foobar .baz .foobar {}
 
-/**/
 

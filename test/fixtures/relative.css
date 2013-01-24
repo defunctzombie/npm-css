@@ -1,6 +1,4 @@
 /* test require dir */
 
-/* should load localwidget based on localwidget/package.json
-/*
-  @require ./localwidget
-*/
+/* should load localwidget based on localwidget/package.json */
+@import "./localwidget";
