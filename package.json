@@ -6,6 +6,9 @@
   "author": "Raynos <raynos2@gmail.com>",
   "repository": "git://github.com/shtylman/npm-css.git",
   "main": "index",
+  "bin": {
+    "npm-css": "bin/npm-css"
+  },
   "contributors": [
     {
       "name": "Jake Verbaten"
@@ -17,11 +20,11 @@
   "dependencies": {
     "resolve": "0.2.3",
     "traverse": "0.6.3",
-    "cssp": "1.0.6"
+    "cssp": "1.0.6",
+    "optimist": "0.3.5"
   },
   "devDependencies": {
-    "tap": "~0.3.1",
-    "optimist": "~0.3.5"
+    "tap": "~0.3.1"
   },
   "licenses": [
     {
