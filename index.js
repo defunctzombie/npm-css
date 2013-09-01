@@ -26,7 +26,7 @@ function replace(nodes, tree) {
 // flatten @imports given a basepath, and a tree
 // inline all of the import statements into the tree
 // @return a tree with all statements inlined
-function flatten(file) {
+function flatten(file, modules) {
     var src = fs.readFileSync(file, 'utf8');
 
     var base = path.dirname(file);
@@ -68,17 +68,31 @@ function flatten(file) {
                 }
             });
 
+            if (modules.indexOf(filepath) !== -1) {
+              return;
+            }
+
+            modules.push(filepath);
+
             // run css file through tree -> flatten -> prefix
             // get required module as a css tree
             // replace @import node with new tree
-            return replace(self.parent.node, prefix(name, flatten(filepath)));
+            return replace(self.parent.node,
+                           prefix(name, flatten(filepath, modules)));
         }
 
         var filepath = path.join(base, name);
 
+        if (modules.indexOf(filepath) !== -1) {
+          return;
+        }
+
+        modules.push(filepath);
+
+
         // path is a file
         if (fs.statSync(filepath).isFile()) {
-            return replace(self.parent.node, flatten(filepath));
+            return replace(self.parent.node, flatten(filepath, modules));
         }
 
         // path is a dir
@@ -89,7 +103,8 @@ function flatten(file) {
         if (fs.existsSync(pkginfo)) {
             var info = JSON.parse(fs.readFileSync(pkginfo));
             filepath = path.join(base, name, info.style || 'index.css')
-            return replace(self.parent.node, prefix(info.name, flatten(filepath)));
+            return replace(self.parent.node,
+                           prefix(info.name, flatten(filepath, modules)));
         }
 
         // no package.json, try index.css in the dir
@@ -98,7 +113,8 @@ function flatten(file) {
         // do not prefix if just loading index.css from a dir
         // allows for easier organization of multi css files without prefixing
         if (fs.existsSync(filepath)) {
-            return replace(self.parent.node, flatten(filepath));
+            return replace(self.parent.node,
+                           flatten(filepath, modules));
         }
     });
 
@@ -108,7 +124,6 @@ function flatten(file) {
 // process given file for // @require statements
 // file should be /full/path/to/file.css
 module.exports = function(file) {
-    var base = path.dirname(file);
-    return cssp.translate(flatten(file));
+    return cssp.translate(flatten(file, []));
 };
 
