@@ -1,6 +1,6 @@
 {
   "name": "npm-css",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Require css from npm",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
