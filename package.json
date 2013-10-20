@@ -24,7 +24,7 @@
     "optimist": "0.3.5"
   },
   "devDependencies": {
-    "tap": "~0.3.1"
+    "mocha": "~1.13.0"
   },
   "licenses": [
     {
@@ -33,6 +33,6 @@
     }
   ],
   "scripts": {
-    "test": "tap --stderr --tap ./test/test.js"
+    "test": "mocha"
   }
 }

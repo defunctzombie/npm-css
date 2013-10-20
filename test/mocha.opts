@@ -1,0 +1,3 @@
+--ui tdd
+--reporter list
+--check-leaks
