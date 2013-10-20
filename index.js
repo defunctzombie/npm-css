@@ -58,11 +58,16 @@ function flatten(file, modules) {
         // @import "module"
         if (name[0] !== '.') {
 
+            // if user uses direct path to css file in module
+            // we pluck the module name from the path start
+            var pkg_name = name.split('/', 1)[0];
+
             // lookup the entry css file
             var filepath = resolve.sync(name, {
                 basedir: base,
                 extensions: ['.css'],
                 packageFilter: function (pkg) {
+                    pkg_name = pkg.name;
                     pkg.main = pkg.style;
                     return pkg;
                 }
@@ -78,7 +83,7 @@ function flatten(file, modules) {
             // get required module as a css tree
             // replace @import node with new tree
             return replace(self.parent.node,
-                           prefix(name, flatten(filepath, modules)));
+                           prefix(pkg_name, flatten(filepath, modules)));
         }
 
         var filepath = path.join(base, name);
