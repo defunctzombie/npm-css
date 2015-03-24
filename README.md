@@ -31,7 +31,7 @@ If you want to build css files on the fly.
 
 ```javascript
 var npmcss = require('npm-css');
-var css = npmcss(/path/to/file);
+var css = npmcss('/path/to/file');
 ```
 
 ## package.json
