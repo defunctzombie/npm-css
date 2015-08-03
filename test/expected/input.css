@@ -5,33 +5,33 @@
 /* foobar stuff */
 
 /* .foobar */
-.foobar {}
+.foobar-npm-css .foobar {}
 
 /* p.foobar */
-p.foobar {}
+.foobar-npm-css p.foobar {}
 
 /* .foobar p .foobar */
-.foobar p .foobar {}
+.foobar-npm-css .foobar p .foobar {}
 
 /* .foorbar p */
-.foobar p {}
+.foobar-npm-css .foobar p {}
 
 /* .foobar p */
-.foobar p {}
+.foobar-npm-css .foobar p {}
 
 /* .foobar.baz */
-.foobar.baz {}
+.foobar-npm-css .foobar.baz {}
 
 /* .foobar .baz */
-.foobar .baz {}
+.foobar-npm-css .foobar .baz {}
 
 /* .foobar .baz */
-.foobar .baz {}
+.foobar-npm-css .foobar .baz {}
 
 /* .baz.foobar */
-.baz.foobar {}
+.foobar-npm-css .baz.foobar {}
 
 /* .foobar .baz .foobar */
-.foobar .baz .foobar {}
+.foobar-npm-css .foobar .baz .foobar {}
 
 
